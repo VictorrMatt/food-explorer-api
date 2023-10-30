@@ -1,7 +1,34 @@
-const cors = require("cors");
-const express = require("express");
-const routes = require("./routes");
+const knex = require("./database/knex");
 const AppError = require("./utils/AppError");
+
+const express = require("express");
+const cors = require("cors");
+const routes = require("./routes");
+
+// creating user admin
+async function createAdmin() {
+  const { hash } = require("bcryptjs");
+
+  const adminProfile = {
+    name: "admin",
+    email: "admin@email.com",
+    password: "123",
+    role: "admin",
+  };
+
+  const hashedPassword = await hash(adminProfile.password, 8);
+  adminProfile.password = hashedPassword;
+
+  const checkUserExists = await knex("users").where({
+    email: adminProfile.email,
+  });
+
+  if (checkUserExists.length === 0) {
+    await knex("users").insert(adminProfile);
+  }
+}
+
+createAdmin();
 
 const app = express();
 app.use(express.json());
