@@ -33,6 +33,7 @@ class DishesRepository {
         ingredients: ingredients,
         price: price,
         description: description,
+        updated_at: knex.fn.now(),
       });
 
       if (updatedDish === 1) {

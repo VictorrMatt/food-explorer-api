@@ -16,15 +16,27 @@ const dishesAvatarController = new DishesAvatarController();
 const dishesRoutes = Router();
 
 dishesRoutes.use(ensureAuthenticated);
-dishesRoutes.use(verifyUserAuthorization(["admin"]));
 
-dishesRoutes.post("/", dishesController.create);
-dishesRoutes.put("/:id", dishesController.update);
-dishesRoutes.delete("/:id", dishesController.delete);
+dishesRoutes.post(
+  "/",
+  verifyUserAuthorization(["admin"]),
+  dishesController.create
+);
+dishesRoutes.put(
+  "/:id",
+  verifyUserAuthorization(["admin"]),
+  dishesController.update
+);
+dishesRoutes.delete(
+  "/:id",
+  verifyUserAuthorization(["admin"]),
+  dishesController.delete
+);
 dishesRoutes.get("/:id", dishesController.index);
 dishesRoutes.get("/", dishesController.read);
 dishesRoutes.patch(
   "/:dish_id/avatar",
+  verifyUserAuthorization(["admin"]),
   upload.single("avatar"),
   dishesAvatarController.update
 );
