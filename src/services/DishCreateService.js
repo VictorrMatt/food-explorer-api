@@ -1,5 +1,4 @@
 const AppError = require("../utils/AppError");
-const { compare } = require("bcryptjs");
 
 class DishCreateService {
   constructor(dishRepository) {
@@ -12,7 +11,7 @@ class DishCreateService {
         throw new AppError("Dados insuficientes.");
       }
 
-      const dish = await this.dishRepository.create({
+      const dish_id = await this.dishRepository.create({
         name,
         category,
         ingredients,
@@ -21,7 +20,11 @@ class DishCreateService {
         user_id,
       });
 
-      return dish;
+      if (dish_id) {
+        return { message: "Prato cadastrado com sucesso." };
+      } else {
+        return { message: "Não foi possível realizar o cadastro." };
+      }
     } catch (error) {
       console.error(error);
       return error;
@@ -39,7 +42,11 @@ class DishCreateService {
         description,
       });
 
-      return dish;
+      if (dish) {
+        return dish;
+      } else {
+        return { message: "Não foi possível encontrar o seu prato." };
+      }
     } catch (error) {
       console.error(error);
       return error;
@@ -50,7 +57,11 @@ class DishCreateService {
     try {
       const dish = await this.dishRepository.delete({ id });
 
-      return dish;
+      if (dish) {
+        return { message: "Prato excluído com sucesso." };
+      } else {
+        return { message: "Não foi possível excluir o prato." };
+      }
     } catch (error) {
       console.error(error);
       return error;
@@ -61,7 +72,11 @@ class DishCreateService {
     try {
       const dish = await this.dishRepository.index({ id });
 
-      return dish;
+      if (dish) {
+        return dish;
+      } else {
+        return { message: "Não foi possível encontrar o seu prato." };
+      }
     } catch (error) {
       console.error(error);
       return error;
@@ -70,9 +85,13 @@ class DishCreateService {
 
   async read({ name, ingredients }) {
     try {
-      const dish = await this.dishRepository.index({ name, ingredients });
+      const dish = await this.dishRepository.read({ name, ingredients });
 
-      return dish;
+      if (dish) {
+        return dish;
+      } else {
+        return { message: "Não foi possível encontrar o prato." };
+      }
     } catch (error) {
       console.error(error);
       return error;

@@ -1,6 +1,8 @@
 const knex = require("./database/knex");
 const AppError = require("./utils/AppError");
 
+const uploadConfig = require("./configs/upload");
+
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
@@ -39,6 +41,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
 
 // responsibility for routes
 app.use(routes);

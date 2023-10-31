@@ -67,12 +67,12 @@ class DishesController {
   }
 
   async read(req, res) {
-    const { name, ingredients } = req.body;
+    const { name, ingredients } = req.query;
 
     const dishRepository = new DishesRepository();
     const dishCreateService = new DishesCreateService(dishRepository);
 
-    const response = await dishCreateService.index({
+    const response = await dishCreateService.read({
       name,
       ingredients,
     });

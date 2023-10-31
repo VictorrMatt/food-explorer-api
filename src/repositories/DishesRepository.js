@@ -18,11 +18,7 @@ class DishesRepository {
         await knex("tags").insert(ingredientsInsert);
       }
 
-      if (dish_id) {
-        return { message: "Prato cadastrado com sucesso." };
-      } else {
-        return { message: "Não foi possível realizar o cadastro." };
-      }
+      return dish_id;
     } catch (error) {
       console.error(error);
       return error;
@@ -42,9 +38,8 @@ class DishesRepository {
       if (updatedDish === 1) {
         const dish = await knex("dishes").where({ id }).first();
         return dish;
-      } else {
-        return { message: "Não foi possível encontrar o seu prato." };
       }
+      return null;
     } catch (error) {
       console.error(error);
       return error;
@@ -53,9 +48,9 @@ class DishesRepository {
 
   async delete({ id }) {
     try {
-      await knex("dishes").where({ id }).delete();
+      const dish = await knex("dishes").where({ id }).delete();
 
-      return { message: "Prato excluído com sucesso." };
+      return dish;
     } catch (error) {
       console.error(error);
       return error;
@@ -66,11 +61,7 @@ class DishesRepository {
     try {
       const dish = await knex("dishes").where({ id }).first();
 
-      if (dish) {
-        return dish;
-      } else {
-        return { message: "Não foi possível encontrar o seu prato." };
-      }
+      return dish;
     } catch (error) {
       console.error(error);
       return error;
@@ -82,30 +73,17 @@ class DishesRepository {
       let dishes;
 
       if (ingredients) {
-        const filterTags = ingredients.split(",").map((tag) => tag.trim());
-
-        /* using inneJoin */
-        dishes = await knex("tags")
-          .select(["dishes.id", "dishes.name", "dishes.user_id"])
-          .whereIn("name", filterTags)
-          .innerJoin("dishes.", "dishes.id", "dishes.note_id")
-          .orderBy("dishes.title");
+        const [{ dish_id }] = await knex("tags")
+          .whereLike("name", `%${ingredients}%`)
+          .orderBy("name");
+        dishes = await knex("dishes").where({ id: dish_id }).orderBy("name");
       } else {
-        notes = await knex("dishes.")
-          .where({ user_id })
-          .whereLike("title", `%${title}%`)
-          .orderBy("title");
+        dishes = await knex("dishes")
+          .whereLike("name", `%${name}%`)
+          .orderBy("name");
       }
 
-      const userTags = await knex("movie_tags").where({ user_id });
-      const notesWithTags = notes.map((note) => {
-        const noteTags = userTags.filter((tag) => tag.note_id === note.id);
-
-        return {
-          ...note,
-          tags: noteTags,
-        };
-      });
+      return dishes;
     } catch (error) {
       console.error(error);
       return error;

@@ -28,7 +28,11 @@ class UserCreateService {
 
       const createdUser = await this.userRepository.create(user);
 
-      return createdUser; // Agora retornamos o usuário completo
+      if (createdUser) {
+        return createdUser;
+      } else {
+        return { message: "Não foi possível realizar o cadastro." };
+      }
     } catch (error) {
       console.error(error);
       return error;

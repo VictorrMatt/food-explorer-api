@@ -5,11 +5,7 @@ class UsersRepository {
     try {
       const user = await knex("users").where({ email }).first();
 
-      if (user) {
-        return user;
-      } else {
-        return { message: "Não foi possível encontrar o usuário." };
-      }
+      return user;
     } catch (error) {
       console.error(error);
       return error;
@@ -26,9 +22,8 @@ class UsersRepository {
         const createdUser = await knex("users").where("id", userId).first();
 
         return createdUser;
-      } else {
-        return { message: "Não foi possível realizar o cadastro." };
       }
+      return null;
     } catch (error) {
       console.error(error);
       return error;
