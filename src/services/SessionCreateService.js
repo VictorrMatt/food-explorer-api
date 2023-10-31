@@ -26,8 +26,10 @@ class SessionCreateService {
 
       // Remove a senha do usuário antes de responder à solicitação.
       delete user.password;
+
       return user;
     } catch (error) {
+      console.error(error);
       return error;
     }
   }

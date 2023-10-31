@@ -8,6 +8,10 @@ class UserCreateService {
 
   async create({ name, email, password }) {
     try {
+      if (!name || !email || !password) {
+        throw new AppError("Dados insuficientes.");
+      }
+
       const checkUserExists = await this.userRepository.findByEmail(email);
 
       if (checkUserExists) {
@@ -26,6 +30,7 @@ class UserCreateService {
 
       return createdUser; // Agora retornamos o usuário completo
     } catch (error) {
+      console.error(error);
       return error;
     }
   }

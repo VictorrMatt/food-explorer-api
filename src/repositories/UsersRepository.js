@@ -2,23 +2,37 @@ const knex = require("../database/knex");
 
 class UsersRepository {
   async findByEmail(email) {
-    const user = await knex("users").where({ email }).first();
+    try {
+      const user = await knex("users").where({ email }).first();
 
-    return user;
+      if (user) {
+        return user;
+      } else {
+        return { message: "Não foi possível encontrar o usuário." };
+      }
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
   }
 
   async create({ name, email, password }) {
-    const user = { name, email, password };
+    try {
+      const user = { name, email, password };
 
-    const [userId] = await knex("users").insert(user);
+      const [userId] = await knex("users").insert(user);
 
-    if (userId) {
-      const createdUser = await knex("users").where("id", userId).first();
-      return createdUser;
+      if (userId) {
+        const createdUser = await knex("users").where("id", userId).first();
+
+        return createdUser;
+      } else {
+        return { message: "Não foi possível realizar o cadastro." };
+      }
+    } catch (error) {
+      console.error(error);
+      return error;
     }
-
-    // Se o userId não for válido, você pode lançar um erro ou retornar null, dependendo das suas necessidades.
-    return null;
   }
 }
 

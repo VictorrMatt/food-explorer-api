@@ -1,11 +1,12 @@
 exports.up = (knex) =>
   knex.schema.createTable("dishes", (table) => {
     table.increments("id");
-    table.text("image_url").default(null);
+    table.text("dish_url").default(null);
     table.text("name").notNullable();
+    table.text("category").default(null);
+    table.text("ingredients").default(null);
+    table.text("price");
     table.text("description").default(null);
-    table.text("ingredients");
-    table.text("category");
     table.integer("user_id").references("id").inTable("users");
     table.timestamp("created_at").default(knex.fn.now());
     table.timestamp("updated_at").default(knex.fn.now());
