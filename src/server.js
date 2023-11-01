@@ -10,29 +10,6 @@ const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
 
-// creating user admin
-async function createAdmin() {
-  const { hash } = require("bcryptjs");
-
-  const adminProfile = {
-    name: "admin",
-    email: "admin@email.com",
-    password: "123",
-    role: "admin",
-  };
-
-  const hashedPassword = await hash(adminProfile.password, 8);
-  adminProfile.password = hashedPassword;
-
-  const checkUserExists = await knex("users").where({
-    email: adminProfile.email,
-  });
-
-  if (checkUserExists.length === 0) {
-    await knex("users").insert(adminProfile);
-  }
-}
-
 const app = express();
 app.use(express.json());
 /* Em resumo, o CORS no Node.js é usado para controlar como seu servidor responde a solicitações de diferentes origens, tornando-o mais seguro ao permitir solicitações apenas de fontes confiáveis e controlando quais recursos podem ser acessados. */
@@ -67,4 +44,3 @@ app.use((error, request, response, next) => {
 
 const PORT = process.env.SERVER_PORT || 3333;
 app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`));
-createAdmin();
