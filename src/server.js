@@ -33,8 +33,6 @@ async function createAdmin() {
   }
 }
 
-createAdmin();
-
 const app = express();
 app.use(express.json());
 /* Em resumo, o CORS no Node.js é usado para controlar como seu servidor responde a solicitações de diferentes origens, tornando-o mais seguro ao permitir solicitações apenas de fontes confiáveis e controlando quais recursos podem ser acessados. */
@@ -69,3 +67,4 @@ app.use((error, request, response, next) => {
 
 const PORT = process.env.SERVER_PORT || 3333;
 app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`));
+createAdmin();
