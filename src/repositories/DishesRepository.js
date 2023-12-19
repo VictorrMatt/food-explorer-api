@@ -27,19 +27,27 @@ class DishesRepository {
 
   async update({ name, category, ingredients, price, description, id }) {
     try {
-      const updatedDish = await knex("dishes").where({ id }).update({
+      await knex("dishes").where({ id }).update({
         name: name,
         category: category,
-        ingredients: ingredients,
         price: price,
         description: description,
         updated_at: knex.fn.now(),
       });
 
-      if (updatedDish === 1) {
-        const dish = await knex("dishes").where({ id }).first();
-        return dish;
+      if (ingredients) {
+        await knex("tags").where({ dish_id: id }).del();
+
+        const ingredientsInsert = ingredients.map((name) => {
+          return {
+            dish_id: id,
+            name,
+          };
+        });
+
+        await knex("tags").where({ dish_id: id }).insert(ingredientsInsert);
       }
+
       return null;
     } catch (error) {
       console.error(error);
