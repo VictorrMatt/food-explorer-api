@@ -21,7 +21,7 @@ class DishCreateService {
       });
 
       if (dish_id) {
-        return { message: "Prato cadastrado com sucesso." };
+        return dish_id;
       } else {
         return { message: "Não foi possível realizar o cadastro." };
       }
